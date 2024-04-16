@@ -20,6 +20,7 @@
 package org.apache.fineract.portfolio.self.registration.api;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -43,17 +44,20 @@ public class SelfServiceRegistrationApiResource {
 
     @POST
     @Produces({ MediaType.APPLICATION_JSON })
-    public String createSelfServiceRegistrationRequest(final String apiRequestBodyAsJson) {
-        this.selfServiceRegistrationWritePlatformService.createRegistrationRequest(apiRequestBodyAsJson);
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public String createSelfServiceRegistrationRequest(final RegistrationRequestData requestData) {
+        // Implement code to capture signing mandate, employment status, photo, ID, signature, etc.
+        this.selfServiceRegistrationWritePlatformService.createRegistrationRequest(requestData);
         return SelfServiceApiConstants.createRequestSuccessMessage;
     }
 
     @POST
     @Path("user")
     @Produces({ MediaType.APPLICATION_JSON })
-    public String createSelfServiceUser(final String apiRequestBodyAsJson) {
-        AppUser user = this.selfServiceRegistrationWritePlatformService.createUser(apiRequestBodyAsJson);
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public String createSelfServiceUser(final UserData userData) {
+        // Implement code to create user with captured information
+        AppUser user = this.selfServiceRegistrationWritePlatformService.createUser(userData);
         return this.toApiJsonSerializer.serialize(CommandProcessingResult.resourceResult(user.getId()));
     }
-
 }
