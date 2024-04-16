@@ -52,12 +52,55 @@ public class SelfServiceRegistrationApiResource {
     }
 
     @POST
-    @Path("user")
+    @Path("/user")
     @Produces({ MediaType.APPLICATION_JSON })
     @Consumes({ MediaType.APPLICATION_JSON })
     public String createSelfServiceUser(final UserData userData) {
         // Implement code to create user with captured information
         AppUser user = this.selfServiceRegistrationWritePlatformService.createUser(userData);
         return this.toApiJsonSerializer.serialize(CommandProcessingResult.resourceResult(user.getId()));
+    }
+
+    @POST
+    @Path("/upload/photo")
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    public String uploadPhoto(final PhotoUploadData photoData) {
+        // Implement code to handle photo upload
+        return "Photo uploaded successfully";
+    }
+
+     @POST
+    @Path("/upload/photo")
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    public Response uploadPhoto(final PhotoUploadData photoData) {
+        if (photoData == null || photoData.getPhoto() == null) {
+            return Response.status(Status.BAD_REQUEST).entity("Photo data is missing").build();
+        }
+        
+        if (photoData.getPhoto().length > 100 * 1024) { // 100KB limit
+            return Response.status(Status.BAD_REQUEST).entity("Photo size exceeds the limit of 100KB").build();
+        }
+        
+        return Response.ok().entity("Photo uploaded successfully").build();
+    }
+
+    @POST
+    @Path("/upload/id")
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    public Response uploadId(final IdUploadData idData) {
+        
+        return Response.ok().entity("ID uploaded successfully").build();
+    }
+
+    @POST
+    @Path("/upload/signature")
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    public String uploadSignature(final SignatureUploadData signatureData) {
+        // Implement code to handle signature upload
+        return "Signature uploaded successfully";
     }
 }
